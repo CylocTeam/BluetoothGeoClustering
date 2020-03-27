@@ -21,12 +21,12 @@ class TagMeasurements:
         relevant_keys = [key for key in dicts.bleId.keys() if display_name.lower() in key.lower()]
         self.relevant_keys = relevant_keys
 
-    def get_measurements(self, rel_time, window_size_minutes):
+    def get_measurements(self, rel_time, window_size_seconds):
         sd = pd.DataFrame([])
         for key in self.relevant_keys:
             current_df = DataParser_funcs.url2df(url=params.url + dicts.bleId[key])
             # allScannedDevicesInTime parse the data
-            current_sd = DataParser_funcs.allScannedDevicesInTime(current_df, rel_time, window_size_minutes,
+            current_sd = DataParser_funcs.allScannedDevicesInTime(current_df, rel_time, window_size_seconds,
                                                                   display_error=0)
             if current_sd.shape[0] != 0:
                 current_sd['DisplayName'] = key
@@ -48,15 +48,15 @@ class TagMeasurements:
                     date_exp = current_sub_experiment.date[distance_ind].to_pydatetime()
                     window_size_timedelta = (datetime.combine(date_exp, end_time) - \
                                              datetime.combine(date_exp, start_time))
-                    window_size_minutes = window_size_timedelta.seconds / 60
+                    window_size_seconds = window_size_timedelta.seconds
                     rel_datetime = datetime.combine(date_exp, start_time)
                     rel_time = pd.Timestamp(rel_datetime)
                     # extract measurements of subset
-                    current_meas = self.get_measurements(rel_time, window_size_minutes)
+                    current_meas = self.get_measurements(rel_time, window_size_seconds)
                     current_meas['setup'] = setup
                     current_meas['obstacle'] = obstacle
                     current_meas['distance'] = current_sub_experiment.distance[distance_ind]
                     tag_measurements = pd.concat([tag_measurements, current_meas], ignore_index=True)
-                    print(obstacle + "; " +setup + "; " +  str(current_sub_experiment.distance[distance_ind]) + "m")
+                    print(self.name+ "; "obstacle + "; " +setup + "; " + str(current_sub_experiment.distance[distance_ind]) + "m")
 
         return tag_measurements
