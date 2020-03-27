@@ -3,7 +3,7 @@ import requests
 import copy
 import params
 import devices_ble_id_excel_dicts as dicts
-import DataParser
+from DataParser import DataParser
 import numpy as np
 
 # Experiment times
