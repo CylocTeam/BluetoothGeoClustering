@@ -9,6 +9,7 @@ import numpy as np
 # Experiment times
 rel_time = pd.to_datetime("2020-03-27 14:00:00")  # Local time! :D
 window_size_minutes = 120
+DataParser_funcs = DataParser()
 
 # Analyze experiment
 name = "yanay"
@@ -18,9 +19,9 @@ relevant_keys = [key for key in dicts.bleId.keys() if display_name.lower() in ke
 sd = pd.DataFrame([])
 # load all data
 for key in relevant_keys:
-    current_df = DataParser.url2df(url=params.url + dicts.bleId[key])
+    current_df = DataParser_funcs.url2df(url=params.url + dicts.bleId[key])
     # allScannedDevicesInTime parse the data
-    current_sd = DataParser.allScannedDevicesInTime(current_df, rel_time, window_size_minutes, display_error=0)
+    current_sd = DataParser_funcs.allScannedDevicesInTime(current_df, rel_time, window_size_minutes, display_error=0)
     sd = pd.concat([sd, current_sd], ignore_index=True)
 print('done loading experiment data')
 

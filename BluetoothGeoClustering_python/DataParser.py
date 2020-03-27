@@ -4,7 +4,7 @@ import copy
 
 
 class DataParser:
-    def url2df(url):
+    def url2df(self,url):
         # extract data from url
         f = requests.get(url)
         df_raw = pd.read_json(f.text)
