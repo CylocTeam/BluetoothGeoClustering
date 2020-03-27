@@ -12,13 +12,20 @@ DataParser_funcs = DataParser()
 
 # Analyze experiment
 # Get BLE data
-name = "yanay"
-TG = TagMeasurements(name)
-TG.set_relevant_keys()
-TG.tag_measurements()
+all_tag_measurements = pd.DataFrame([])
+for name in dicts.name_to_displayname.lower():
+    # name = "yanay"
+    TG = TagMeasurements(name)
+    TG.set_relevant_keys()
+    current_tag_meas = TG.tag_measurements()
+    all_tag_measurements = pd.concat([all_tag_measurements, current_tag_meas], ignore_index=True)
+    print('Done tagging: ' + name + " data")
 
+time_str = str(pd.Timestamp.now().to_numpy())
+ind = -time_str[::-1].find('.') -1
+all_tag_measurements.to_pickle('tag_measurements_'+time_str[:ind]+'.pkl')
 
-
+# b = pd.read_pickle('my_file.pkl')
 
 
 
