@@ -23,11 +23,11 @@ for name in dicts.name_to_displayname:
     print('Done tagging: ' + name + "'s data")
 
 time_str = str(pd.Timestamp.now().to_numpy())
-ind = -time_str[::-1].find('.') -1
-all_tag_measurements.to_pickle('tag_measurements_'+time_str[:ind]+'.pkl')
+ind = -time_str[::-1].find('.') - 1
+time_str = time_str[:ind]
+time_str = time_str.replace(':', '_')
+time_str = time_str.replace('-', '_')
+time_str = time_str.replace('T', '__')
+all_tag_measurements.to_pickle('tag_measurements_' + time_str[:ind] + '.pkl')
 
 # b = pd.read_pickle('my_file.pkl')
-
-
-
-
