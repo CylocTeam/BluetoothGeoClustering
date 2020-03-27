@@ -40,8 +40,8 @@ class TagMeasurements:
             for obstacle in self.obstacles:
                 current_sub_experiment = self.experiment_file.where(
                     np.logical_and(self.experiment_file.obstacle == obstacle, self.experiment_file.setup == setup))
-                current_sub_experiment = current_sub_experiment.dropna(how='all').reset_index(drop=True)
-                type(current_sub_experiment.start_time[0])
+                # current_sub_experiment = current_sub_experiment.dropna(how='all').reset_index(drop=True)
+                current_sub_experiment = current_sub_experiment.dropna(how='any').reset_index(drop=True)
                 if not type(current_sub_experiment.start_time[0]) is float:
                     for distance_ind in range(current_sub_experiment.shape[0]):
                         # extract time of subset
