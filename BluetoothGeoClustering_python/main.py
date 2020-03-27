@@ -13,7 +13,7 @@ DataParser_funcs = DataParser()
 # Analyze experiment
 # Get BLE data
 all_tag_measurements = pd.DataFrame([])
-for name in dicts.name_to_displayname.lower():
+for name in dicts.name_to_displayname:
     # name = "yanay"
     TG = TagMeasurements(name)
     TG.set_relevant_keys()
