@@ -27,11 +27,11 @@ class DataParser:
         df_sd = df_sd.sort_values("time")
         return df_sd
 
-    def allScannedDevicesInTime(self, df, rel_time, window_size_minutes=0, display_error=1):
+    def allScannedDevicesInTime(self, df, rel_time, window_size_seconds=0, display_error=1):
         # parse the data
         sd = pd.DataFrame()
         id_suffix = df.scanningDeviceEddystoneUid[0][-12:]
-        time_window = pd.offsets.Minute(window_size_minutes)
+        time_window = pd.offsets.Second(window_size_seconds)
         mask = (df.scannedDevicesMinTime <= rel_time) & (
                 df.scannedDevicesMaxTime >= rel_time + time_window)
         # time_window = pd.offsets.Minute(window_size_minutes / 2)
