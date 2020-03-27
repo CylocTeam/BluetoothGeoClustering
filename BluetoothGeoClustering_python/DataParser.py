@@ -31,9 +31,12 @@ class DataParser:
         # parse the data
         sd = pd.DataFrame()
         id_suffix = df.scanningDeviceEddystoneUid[0][-12:]
-        time_window = pd.offsets.Minute(window_size_minutes / 2)
-        mask = (df.scannedDevicesMinTime <= rel_time + time_window) & (
-                df.scannedDevicesMaxTime >= rel_time - time_window)
+        time_window = pd.offsets.Minute(window_size_minutes)
+        mask = (df.scannedDevicesMinTime <= rel_time) & (
+                    df.scannedDevicesMaxTime >= rel_time + time_window)
+        # time_window = pd.offsets.Minute(window_size_minutes / 2)
+        # mask = (df.scannedDevicesMinTime <= rel_time + time_window) & (
+        #         df.scannedDevicesMaxTime >= rel_time - time_window)
         if not any(mask):
             print('No date at this time from: ' + id_suffix)
             return sd
