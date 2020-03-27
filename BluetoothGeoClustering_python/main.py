@@ -12,6 +12,7 @@ DataParser_funcs = DataParser()
 
 # Analyze experiment
 # Get BLE data
+# PAY ATTENTION: tag_measurements function will delete all row in excel that contains nan
 all_tag_measurements = pd.DataFrame([])
 for name in dicts.name_to_displayname:
     # name = "yanay"
