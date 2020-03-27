@@ -57,6 +57,6 @@ class TagMeasurements:
                     current_meas['obstacle'] = obstacle
                     current_meas['distance'] = current_sub_experiment.distance[distance_ind]
                     tag_measurements = pd.concat([tag_measurements, current_meas], ignore_index=True)
-                    print(self.name+ "; "obstacle + "; " +setup + "; " + str(current_sub_experiment.distance[distance_ind]) + "m")
+                    print(self.name+ "; " + obstacle + "; " +setup + "; " + str(current_sub_experiment.distance[distance_ind]) + "m")
 
         return tag_measurements
