@@ -20,7 +20,7 @@ for name in dicts.name_to_displayname:
     TG.set_relevant_keys()
     current_tag_meas = TG.tag_measurements()
     all_tag_measurements = pd.concat([all_tag_measurements, current_tag_meas], ignore_index=True)
-    print('Done tagging: ' + name + " data")
+    print('Done tagging: ' + name + "'s data")
 
 time_str = str(pd.Timestamp.now().to_numpy())
 ind = -time_str[::-1].find('.') -1
