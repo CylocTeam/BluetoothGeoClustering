@@ -4,7 +4,7 @@ import copy
 
 
 class DataParser:
-    def url2df(self,url):
+    def url2df(self, url):
         # extract data from url
         f = requests.get(url)
         df_raw = pd.read_json(f.text)
@@ -33,7 +33,7 @@ class DataParser:
         id_suffix = df.scanningDeviceEddystoneUid[0][-12:]
         time_window = pd.offsets.Minute(window_size_minutes)
         mask = (df.scannedDevicesMinTime <= rel_time) & (
-                    df.scannedDevicesMaxTime >= rel_time + time_window)
+                df.scannedDevicesMaxTime >= rel_time + time_window)
         # time_window = pd.offsets.Minute(window_size_minutes / 2)
         # mask = (df.scannedDevicesMinTime <= rel_time + time_window) & (
         #         df.scannedDevicesMaxTime >= rel_time - time_window)
