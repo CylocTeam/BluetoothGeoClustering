@@ -58,5 +58,5 @@ class TagMeasurements:
                     current_meas['distance'] = current_sub_experiment.distance[distance_ind]
                     tag_measurements = pd.concat([tag_measurements, current_meas], ignore_index=True)
                     print(self.name+ "; " + obstacle + "; " +setup + "; " + str(current_sub_experiment.distance[distance_ind]) + "m")
-
+        tag_measurements.dropna(how='any').reset_index(drop=True)
         return tag_measurements
