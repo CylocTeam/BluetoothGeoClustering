@@ -14,10 +14,10 @@ bleId = {
 }
 
 name_to_displayname = {
-    "Johnotan": "JBobrutsky",
-    "ROI": "RCohen",
+    # "johnotan": "JBobrutsky",
+    "roi": "RCohen",
     "yanay": "YDanan",
-    "almog": "Pixel1_AZer",
+    # "almog": "Pixel1_AZer",
     "or": "OAvitan",
-    "gal": "GGroissman",
+    # "gal": "GGroissman",
 }
