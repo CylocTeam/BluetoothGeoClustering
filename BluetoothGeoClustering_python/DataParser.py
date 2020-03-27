@@ -37,7 +37,7 @@ class DataParser:
         # time_window = pd.offsets.Minute(window_size_minutes / 2)
         # mask = (df.scannedDevicesMinTime <= rel_time + time_window) & (
         #         df.scannedDevicesMaxTime >= rel_time - time_window)
-        if not any(mask) & display_error:
+        if (not any(mask)) & display_error:
             print('No date at this time from: ' + id_suffix)
             return sd
         for row in df[mask].index:
