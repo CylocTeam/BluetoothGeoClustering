@@ -17,7 +17,8 @@ name_to_displayname = {
     # "johnotan": "JBobrutsky",
     "roi": "RCohen",
     "yanay": "YDanan",
-    # "almog": "Pixel1_AZer",
+    "almog": "Pixel1_AZer",
+    "almog_2": "Pixel1_AZer",
     "or": "OAvitan",
     # "gal": "GGroissman",
 }
