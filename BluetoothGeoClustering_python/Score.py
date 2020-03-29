@@ -39,19 +39,27 @@ class ScoreClass:
                                                             'rssi', self.win_size_seconds)
         condition_data = result[self.column_name] >= self.data_th
         condition_distance = result['distance'] <= self.distance_th
-        P = (condition_data == 1)  # positive
+        P = (condition_distance == 1)  # positive
+        # condition positive (P) the number of real positive cases in the data
         T = (condition_data == condition_distance)  # true
-        N = (condition_data == 0)  # negative
+        N = (condition_distance == 0)  # negative
+        # N the number of real negative cases in the data
         F = np.logical_not(T)  # false
+
         TP = np.logical_and(T, P)
         FP = np.logical_and(F, P)
         FN = np.logical_and(F, N)
+        TN = np.logical_and(T, N)
 
-        return{
-            'TP':TP,
+        return {
+            'TP': TP,
             'FP': FP,
-            'FN':FN,
-            'recall':
-
-        }
-
+            'FN': FN,
+            'RECALL': TP / P,
+            'TPR': TP / P,
+            'TNR': TN / N,
+            'PRECISION': TP / (TP + FN),
+            'PPV': TP / (TP + FN),
+            'ACC': T / (P + N),
+            'ACCURACY': T / (P + N),
+        }[score.upper()]
