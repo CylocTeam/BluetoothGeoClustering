@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+BluetoothGeoClustering_python/\.idea/
+
+*.onetoc2
