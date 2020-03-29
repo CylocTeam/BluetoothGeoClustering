@@ -11,7 +11,7 @@ class DataFuncs:
         df_index = df_index.sort_index()
         return df_index
 
-    def switcher(self, df, func, column_name, win_size, percent=90):
+    def switcher(self, df, func, column_name, win_size, percent=80):
         return {
             'mean': df[column_name].rolling(win_size, min_periods=1).mean(),
             'var': df[column_name].rolling(win_size, min_periods=1).var(),
@@ -50,6 +50,7 @@ class DataFuncs:
 
     def run_rolling_func_df_2_columns(self, df, func, column_name_group_first, column_name_group_second,
                                       column_name_func, win_size_seconds):
+        # needed to group by distance and display name so the results from one distance influence other distance
         df_grouped = df.groupby([column_name_group_first, column_name_group_second])
         df_rolling = df_grouped.apply(lambda x:
                                       self.apply_and_add_rolling_func_to_df(x, func, column_name_func,
