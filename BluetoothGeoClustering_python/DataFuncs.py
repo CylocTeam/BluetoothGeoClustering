@@ -11,8 +11,7 @@ class DataFuncs:
         df_index = df_index.sort_index()
         return df_index
 
-
-    def switcher(self,df, func, column_name, win_size):
+    def switcher(self,df, func, column_name, win_size, percent=None):
         return {
             'mean': df[column_name].rolling(win_size, min_periods=1).mean(),
             'var': df[column_name].rolling(win_size, min_periods=1).var(),
@@ -21,6 +20,8 @@ class DataFuncs:
             'max': df[column_name].rolling(win_size, min_periods=1).max(),
             'median': df[column_name].rolling(win_size, min_periods=1).median(),
             'count': df[column_name].rolling(win_size, min_periods=1).count(),
+            'percentile': df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: np.percentile(x, percent, interpolation='nearest'))
         }[func]
 
 
@@ -48,7 +49,8 @@ class DataFuncs:
                                       self.apply_and_add_rolling_func_to_df(x, func, column_name_func, win_size_seconds))
         return df_rolling
 
-    
+
+
 
 # all_tag_measurements = pd.read_pickle(r'tag_measurements_2020_03_28.pkl')
 # all_tag_measurements = all_tag_measurements.dropna(how='any').reset_index(drop=True)
