@@ -48,6 +48,7 @@ class DataFuncs:
                                       self.apply_and_add_rolling_func_to_df(x, func, column_name_func, win_size_seconds))
         return df_rolling
 
+    
 
 # all_tag_measurements = pd.read_pickle(r'tag_measurements_2020_03_28.pkl')
 # all_tag_measurements = all_tag_measurements.dropna(how='any').reset_index(drop=True)
