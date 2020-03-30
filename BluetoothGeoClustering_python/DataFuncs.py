@@ -2,13 +2,19 @@ import numpy as np
 
 
 class DataFuncs:
+    def __init__(self):
+        self.percent = 90
+
     def create_rolling_df_in_time(self, df):
         df_index = df.copy()
         df_index.index = df_index.time
         df_index = df_index.sort_index()
         return df_index
 
-    def switcher(self, df, func, column_name, win_size, percent=95):
+    def set_percent(self, percent):
+        self.percent = percent
+
+    def switcher(self, df, func, column_name, win_size):
         return {
             'mean': df[column_name].rolling(win_size, min_periods=1).mean(),
             'var': df[column_name].rolling(win_size, min_periods=1).var(),
@@ -18,7 +24,7 @@ class DataFuncs:
             'median': df[column_name].rolling(win_size, min_periods=1).median(),
             'count': df[column_name].rolling(win_size, min_periods=1).count(),
             'percentile': df[column_name].rolling(win_size, min_periods=1).apply(
-                lambda x: np.percentile(x, percent, interpolation='nearest')),
+                lambda x: np.percentile(x, self.percent, interpolation='nearest')),
         }[func]
 
     def apply_and_add_rolling_func_to_df(self, df, func, column_name, win_size_seconds):
