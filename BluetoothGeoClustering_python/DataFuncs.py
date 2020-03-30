@@ -5,6 +5,7 @@ class DataFuncs:
     def __init__(self):
         self.percent = 90
         self.margin = 0
+        self.df_rolling = None
 
     def create_rolling_df_in_time(self, df):
         df_index = df.copy()
@@ -58,9 +59,9 @@ class DataFuncs:
         #         win_size_seconds - int of window size in seconds
         # """
 
+        df = self.create_rolling_df_in_time(df)
         win_size = str(win_size_seconds) + 's'
         column_func_name = func + '_' + column_name
-        df = self.create_rolling_df_in_time(df)
         x = self.switcher(df, func, column_name, win_size)
         df[column_func_name] = x
         return df
