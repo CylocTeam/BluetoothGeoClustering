@@ -4,6 +4,7 @@ import numpy as np
 class DataFuncs:
     def __init__(self):
         self.percent = 90
+        self.margin = 0
 
     def create_rolling_df_in_time(self, df):
         df_index = df.copy()
@@ -13,6 +14,18 @@ class DataFuncs:
 
     def set_percent(self, percent):
         self.percent = percent
+
+    def set_margin(self, margin):
+        self.margin = margin
+
+    def percent_above_percentile(self, series):
+        percentile_number = np.percentile(series, self.percent, interpolation='nearest')
+        return np.sum(series >= (percentile_number-self.margin)) / series.shape[0]
+
+    def percent_above_percentile_counts(self, series):
+        percentile_number = np.percentile(series, self.percent, interpolation='nearest')
+        return np.sum(series >= (percentile_number-self.margin))
+
 
     def switcher(self, df, func, column_name, win_size):
         return {
@@ -25,6 +38,10 @@ class DataFuncs:
             'count': df[column_name].rolling(win_size, min_periods=1).count(),
             'percentile': df[column_name].rolling(win_size, min_periods=1).apply(
                 lambda x: np.percentile(x, self.percent, interpolation='nearest')),
+            'above_percentile': df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: self.percent_above_percentile(x)),
+            'above_percentile_counts': df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: self.percent_above_percentile_counts(x)),
         }[func]
 
     def apply_and_add_rolling_func_to_df(self, df, func, column_name, win_size_seconds):
