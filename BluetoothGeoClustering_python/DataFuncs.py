@@ -44,6 +44,10 @@ class DataFuncs:
                 lambda x: self.percent_above_percentile_counts(x)),
         }[func]
 
+    def exclude_display_name_from_df(self, df, exclude_name):
+        df_exclude = df[df.DisplayName != exclude_name]
+        return df_exclude
+
     def apply_and_add_rolling_func_to_df(self, df, func, column_name, win_size_seconds):
         # """
         # Inputs:
