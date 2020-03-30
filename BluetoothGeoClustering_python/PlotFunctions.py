@@ -30,8 +30,10 @@ class PlotFuncs:
             ax = sns.violinplot(x=np.round(show_measurements["distance"] * 4) / 4,
                                 y=show_measurements[y_label], hue=show_measurements["DisplayName"]).set_title(title)
 
-    def plot_data(self, func, plot_func='violinplot', obstacle='No Obstacle', plot_hue=0):
+    def plot_data(self, func, plot_func='violinplot', obstacle='No Obstacle', plot_hue=0, percent=90, margin=0):
         DataFuncsObj = DataFuncs()
+        DataFuncsObj.set_percent(percent)
+        DataFuncsObj.set_margin(margin)
         tag_rolling = DataFuncsObj.run_rolling_func_df_2_columns(self.tag_measurements, func, 'DisplayName',
                                                                  'distance', 'rssi', self.win_size_seconds)
         show_measurements = tag_rolling.where(tag_rolling.obstacle == obstacle)
