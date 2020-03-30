@@ -5,6 +5,7 @@ class DataFuncs:
     def __init__(self):
         self.percent = 90
         self.margin = 0
+        self.df_rolling = None
 
     def create_rolling_df_in_time(self, df):
         df_index = df.copy()
@@ -79,9 +80,4 @@ class DataFuncs:
         df_rolling = df_grouped.apply(lambda x:
                                       self.apply_and_add_rolling_func_to_df(x, func, column_name_func,
                                                                             win_size_seconds))
-        return df_rolling
-
-    def create_rolling_df_obj(self, df, column_name_group_first, column_name_group_second, column_name_func,win_size):
-        df_grouped = df.groupby([column_name_group_first, column_name_group_second])
-        df_rolling = df_grouped[column_name_func].rolling(win_size, min_periods=1)
         return df_rolling
