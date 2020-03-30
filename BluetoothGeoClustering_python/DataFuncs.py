@@ -1,7 +1,4 @@
 import numpy as np
-from matplotlib import pyplot as plt
-import pandas as pd
-import seaborn as sns
 
 
 class DataFuncs:
@@ -11,7 +8,7 @@ class DataFuncs:
         df_index = df_index.sort_index()
         return df_index
 
-    def switcher(self, df, func, column_name, win_size, percent=80):
+    def switcher(self, df, func, column_name, win_size, percent=95):
         return {
             'mean': df[column_name].rolling(win_size, min_periods=1).mean(),
             'var': df[column_name].rolling(win_size, min_periods=1).var(),
@@ -56,10 +53,3 @@ class DataFuncs:
                                       self.apply_and_add_rolling_func_to_df(x, func, column_name_func,
                                                                             win_size_seconds))
         return df_rolling
-
-
-DataFuncsObj = DataFuncs()
-all_tag_measurements = pd.read_pickle(r'tag_measurements_2020_03_28.pkl')
-all_tag_measurements = all_tag_measurements.dropna(how='any').reset_index(drop=True)
-all_tag_rolling = DataFuncsObj.run_rolling_func_df_2_columns(all_tag_measurements, 'mean', 'DisplayName','distance', 'rssi', 10)
-# all_tag_rolling = DataFuncsObj.run_rolling_func_df(all_tag_measurements, 'mean', 'DisplayName', 'rssi', 10)
