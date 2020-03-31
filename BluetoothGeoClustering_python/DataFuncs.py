@@ -100,7 +100,7 @@ class DataFuncs:
         else:
             df_distance = df.where((df.distance == norm_distance) & (df.setup == setup))
             df_distance = df_distance.dropna(how='any').reset_index(drop=True)
-        normalized = np.mean(df_distance.rssi)
+        normalized = np.median(df_distance.rssi)
         df_normalized = df.copy()
         df_normalized.rssi = df_normalized.rssi - normalized
         return df_normalized
