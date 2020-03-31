@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 
 class DataFuncs:
@@ -21,12 +22,11 @@ class DataFuncs:
 
     def percent_above_percentile(self, series):
         percentile_number = np.percentile(series, self.percent, interpolation='nearest')
-        return np.sum(series >= (percentile_number-self.margin)) / series.shape[0]
+        return np.sum(series >= (percentile_number - self.margin)) / series.shape[0]
 
     def percent_above_percentile_counts(self, series):
         percentile_number = np.percentile(series, self.percent, interpolation='nearest')
-        return np.sum(series >= (percentile_number-self.margin))
-
+        return np.sum(series >= (percentile_number - self.margin))
 
     def switcher(self, df, func, column_name, win_size):
         return {
@@ -81,3 +81,34 @@ class DataFuncs:
                                       self.apply_and_add_rolling_func_to_df(x, func, column_name_func,
                                                                             win_size_seconds))
         return df_rolling
+
+    def normalize_by_distance_single_displayname(self, df, norm_distance, setup=None):
+        """
+        Inputs:
+                setup - the wanted setup for normalization
+                        setup = None for all setups
+        """
+        unique_distances = pd.unique(df.distance)
+        if len(np.where(unique_distances == norm_distance)[0]) == 0:
+            norm_distance_old = norm_distance
+            norm_distance = unique_distances[np.argmin(np.abs(unique_distances - norm_distance))]
+            print(df.DisplayName.iloc[0] + ':There is no ' + str(norm_distance_old) +
+                  'm distance, Therefore we use ' + str(norm_distance) + 'm to normalize')
+        if setup is None:
+            df_distance = df.where(df.distance == norm_distance)
+            df_distance = df_distance.dropna(how='any').reset_index(drop=True)
+        else:
+            df_distance = df.where((df.distance == norm_distance) & (df.setup == setup))
+            df_distance = df_distance.dropna(how='any').reset_index(drop=True)
+        normalized = np.mean(df_distance.rssi)
+        df_normalized = df.copy()
+        df_normalized.rssi = df_normalized.rssi - normalized
+        return df_normalized
+
+    def normalize_by_distance(self, df, norm_distance, setup=None):
+        df_grouped = df.groupby(['DisplayName'])
+        df_normalized = df_grouped.apply(lambda x:
+                                         self.normalize_by_distance_single_displayname(x, norm_distance, setup))
+        df_normalized.index = df_normalized.index.droplevel(0)
+
+        return df_normalized
