@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 class DataFuncs:
     def __init__(self):
         self.percent = 90
@@ -90,9 +91,9 @@ class DataFuncs:
         unique_distances = pd.unique(df.distance)
         if len(np.where(unique_distances == norm_distance)[0]) == 0:
             norm_distance_old = norm_distance
-            norm_distance = unique_distances[np.argmin(np.abs(unique_distances-norm_distance))]
-            print('There is no ' + str(norm_distance_old) +
-                  'm distance, Therefore we use '+ str(norm_distance)+'m to normalize')
+            norm_distance = unique_distances[np.argmin(np.abs(unique_distances - norm_distance))]
+            print(df.DisplayName.iloc[0] + ':There is no ' + str(norm_distance_old) +
+                  'm distance, Therefore we use ' + str(norm_distance) + 'm to normalize')
         if setup is None:
             df_distance = df.where(df.distance == norm_distance)
             df_distance = df_distance.dropna(how='any').reset_index(drop=True)
@@ -108,5 +109,6 @@ class DataFuncs:
         df_grouped = df.groupby(['DisplayName'])
         df_normalized = df_grouped.apply(lambda x:
                                          self.normalize_by_distance_single_displayname(x, norm_distance, setup))
+        df_normalized.index = df_normalized.index.droplevel(0)
 
         return df_normalized
