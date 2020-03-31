@@ -84,6 +84,34 @@ class ScoreClass:
             'FA': FN,
         }[score.upper()]
 
+    def get_all_scores(self):
+        if self.reset_scores:
+            self.calc_T_F_P_N()
+
+        TP = np.sum(np.logical_and(self.T_vec, self.P_vec))
+        FP = np.sum(np.logical_and(self.F_vec, self.P_vec))
+        FN = np.sum(np.logical_and(self.F_vec, self.N_vec))
+        TN = np.sum(np.logical_and(self.T_vec, self.N_vec))
+        P = np.sum(self.P_vec)
+        N = np.sum(self.N_vec)
+        F = np.sum(self.F_vec)
+        T = np.sum(self.T_vec)
+        all = T+F
+        results = pd.DataFrame(
+         {
+            'All': all,
+            'TP': TP,
+            'MD (FP)': FP,
+            'MD/P (FP/P) ': FP/P,
+            'FA (FN)': FN,
+            'FA/N (FN/N)': FN/N,
+            'RECALL (TPR)': TP / P,
+            'TNR': TN / N,
+            'PRECISION (PPV)': TP / (TP + FN),
+            'ACCURACY': T / (P + N),
+         })
+        return results
+
 # all_tag_measurements = pd.read_pickle(r'tag_measurements_2020_03_28.pkl')
 # all_tag_measurements = all_tag_measurements.dropna(how='any').reset_index(drop=True)
 # score_obj = ScoreClass(all_tag_measurements, 60, 'mean', 3, -85)
