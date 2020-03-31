@@ -1,5 +1,5 @@
 import numpy as np
-
+import pandas as pd
 
 class DataFuncs:
     def __init__(self):
@@ -87,14 +87,19 @@ class DataFuncs:
                 setup - the wanted setup for normalization
                         setup = None for all setups
         """
-
+        unique_distances = pd.unique(df.distance)
+        if len(np.where(unique_distances == norm_distance)[0]) == 0:
+            norm_distance_old = norm_distance
+            norm_distance = unique_distances[np.argmin(np.abs(unique_distances-norm_distance))]
+            print('There is no ' + str(norm_distance_old) +
+                  'm distance, Therefore we use '+ str(norm_distance)+'m to normalize')
         if setup is None:
             df_distance = df.where(df.distance == norm_distance)
             df_distance = df_distance.dropna(how='any').reset_index(drop=True)
         else:
             df_distance = df.where((df.distance == norm_distance) & (df.setup == setup))
             df_distance = df_distance.dropna(how='any').reset_index(drop=True)
-        normalized = np.mean(df_distance.distance)
+        normalized = np.mean(df_distance.rssi)
         df_normalized = df.copy()
         df_normalized.rssi = df_normalized.rssi - normalized
         return df_normalized
@@ -102,6 +107,6 @@ class DataFuncs:
     def normalize_by_distance(self, df, norm_distance, setup=None):
         df_grouped = df.groupby(['DisplayName'])
         df_normalized = df_grouped.apply(lambda x:
-                                         self.normalize_by_distance_single_displayname(x, df, norm_distance))
+                                         self.normalize_by_distance_single_displayname(x, norm_distance, setup))
 
         return df_normalized
