@@ -35,6 +35,7 @@ class ScoreClass:
         if self.data_th is None:
             print('Please set data th')
             return
+
         result = DataFuncsObj.run_rolling_func_df_2_columns(self.tag_data, self.func, 'DisplayName', 'distance',
                                                             'rssi', self.win_size_seconds)
         condition_data = result[self.column_name] >= self.data_th
@@ -66,6 +67,8 @@ class ScoreClass:
             'PPV': TP / (TP + FN),
             'ACC': T / (P + N),
             'ACCURACY': T / (P + N),
+            'MD': FP,
+            'FA': FN,
         }[score.upper()]
 
 
@@ -74,10 +77,11 @@ all_tag_measurements = all_tag_measurements.dropna(how='any').reset_index(drop=T
 score_obj = ScoreClass(all_tag_measurements, 60)
 score_obj.set_func('mean')
 score_obj.set_distance_th(3)
-score_obj.set_data_th(-80)
+score_obj.set_data_th(-85)
 print(score_obj.scores('TP'))
 print(score_obj.scores('FP'))
 print(score_obj.scores('FN'))
+
 print(score_obj.scores('RECALL'))
 
 pass
