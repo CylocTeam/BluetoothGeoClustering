@@ -111,13 +111,3 @@ class ScoreClass:
             'ACCURACY': T / (P + N),
          }, orient='index', columns=['score'])
         return results
-
-# DataFuncsObj = DataFuncs()
-# all_tag_measurements = pd.read_pickle(r'tag_measurements_2020_03_28.pkl')
-# all_tag_measurements = all_tag_measurements.dropna(how='any').reset_index(drop=True)
-# #normalized data
-# norm_distance = 1 #m
-# setup = 'Phone in hand'
-# plot_tag_data = DataFuncsObj.normalize_by_distance(all_tag_measurements,norm_distance, setup )
-# score_obj = ScoreClass(plot_tag_data, 60, 'mean', 3, -85)
-# score_obj.get_all_scores()
