@@ -97,7 +97,7 @@ class ScoreClass:
         F = np.sum(self.F_vec)
         T = np.sum(self.T_vec)
         all = T+F
-        results = pd.DataFrame(
+        results = pd.DataFrame.from_dict(
          {
             'All': all,
             'TP': TP,
@@ -115,13 +115,4 @@ class ScoreClass:
 # all_tag_measurements = pd.read_pickle(r'tag_measurements_2020_03_28.pkl')
 # all_tag_measurements = all_tag_measurements.dropna(how='any').reset_index(drop=True)
 # score_obj = ScoreClass(all_tag_measurements, 60, 'mean', 3, -85)
-# # score_obj.set_func('mean')
-# # score_obj.set_distance_th(3)
-# # score_obj.set_data_th(-85)
-# print(score_obj.scores('TP'))
-# print(score_obj.scores('FP'))
-# print(score_obj.scores('FN'))
-#
-# print(score_obj.scores('RECALL'))
-#
-# pass
+# score_obj.get_all_scores()
