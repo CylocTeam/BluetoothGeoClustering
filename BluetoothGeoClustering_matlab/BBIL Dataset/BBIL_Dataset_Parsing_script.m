@@ -9,7 +9,7 @@
 %%
 clear all; close all; clc;
 %%
-dir_path = 'C:\Projects\BLE_RSSI\Datasets\BLE Beacon Indoor Localization Dataset (BBIL Dataset)\';
+dir_path = 'D:\Documents\Projects\Bluetooth\BluetoothGeoClustering\BluetoothGeoClustering_matlab\BBIL Dataset\';
 experiment_dirs = {'experiment1\', 'experiment2\'};
 folder_names = {'train\', 'test\', 'valid\'};
 %% 1. Parse AP locations into sessions:
