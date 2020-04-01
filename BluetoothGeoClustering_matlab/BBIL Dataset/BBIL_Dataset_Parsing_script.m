@@ -61,6 +61,8 @@ for exp_idx = 1:length(experiment_dirs)
         target_dir = ['Parsed_Data\' experiment_dirs{exp_idx}, folder_names{folder_idx}];
         if ~exist(target_dir)
             mkdir(target_dir)
+            copyfile(edges_details_path, ['Parsed_Data\' experiment_dirs{exp_idx}]);
+            copyfile([dir_path, experiment_dirs{exp_idx}, 'room.png'], ['Parsed_Data\' experiment_dirs{exp_idx}]);
         end
         
         for b_id_idx = 1:length(beaconid_vec)
@@ -116,11 +118,13 @@ for exp_idx = 1:length(experiment_dirs)
         data_filenames_per_beaconid = {data_filenames_per_beaconid.name}.';
         
         exp_ble_rssi_mat = edgenodeid_vec;
+        exp_room_index_vec = [];
         for data_idx = 1:length(data_filenames_per_beaconid)
             data_per_beacon_id = readtable([target_dir, data_filenames_per_beaconid{data_idx}],'Delimiter',',');
             date_time_values = unique(data_per_beacon_id.Datetime);
             
             exp_ble_rssi_sub_mat = nan+zeros(length(edgenodeid_vec), length(date_time_values));
+            exp_room_index_sub_vec = data_per_beacon_id(1:size(data_per_beacon_id,1)/size(date_time_values,1):end,:).isSameRoom.';
             for edgenodeid_idx = 1:length(edgenodeid_vec)
                 data_per_edgenodeid = data_per_beacon_id(data_per_beacon_id.edgenodeid == edgenodeid_vec(edgenodeid_idx),:);
                 if ~isempty(data_per_edgenodeid)
@@ -129,8 +133,10 @@ for exp_idx = 1:length(experiment_dirs)
             end
             
             exp_ble_rssi_mat = [exp_ble_rssi_mat, exp_ble_rssi_sub_mat];
+            exp_room_index_vec = [exp_room_index_vec, exp_room_index_sub_vec];
         end
         
         save([experiment_dirs{exp_idx}(1:end-1), '_', folder_names{folder_idx}(1:end-1), '_ble_rssi_mat.mat'],'exp_ble_rssi_mat');
+        save([experiment_dirs{exp_idx}(1:end-1), '_', folder_names{folder_idx}(1:end-1), '_room_index_vec.mat'],'exp_room_index_vec');
     end
 end
