@@ -7,6 +7,8 @@ class DataFuncs:
         self.percent = 90
         self.margin = 0
         self.df_rolling = None
+        self.top_percent = 80
+        self.bottom_percent = 20
 
     def create_rolling_df_in_time(self, df):
         df_index = df.copy()
@@ -20,9 +22,21 @@ class DataFuncs:
     def set_margin(self, margin):
         self.margin = margin
 
+    def set_top_percent(self, top_percent):
+        self.top_percent = top_percent
+
+    def set_bottom_percent(self, bottom_percent):
+        self.bottom_percent = bottom_percent
+
     def percent_above_percentile(self, series):
         percentile_number = np.percentile(series, self.percent, interpolation='nearest')
         return np.sum(series >= (percentile_number - self.margin)) / series.shape[0]
+
+    def different_between_percentiles(self, series):
+        top_percentile = np.percentile(series, self.top_percent, interpolation='nearest')
+        bottom_percentile = np.percentile(series, self.bottom_percent, interpolation='nearest')
+
+        return top_percentile-bottom_percentile
 
     def percent_above_percentile_counts(self, series):
         percentile_number = np.percentile(series, self.percent, interpolation='nearest')
@@ -43,6 +57,8 @@ class DataFuncs:
                 lambda x: self.percent_above_percentile(x)),
             'above_percentile_counts': df[column_name].rolling(win_size, min_periods=1).apply(
                 lambda x: self.percent_above_percentile_counts(x)),
+            'different_between_percentiles': df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: self.different_between_percentiles(x)),
         }[func]
 
     def exclude_display_name_from_df(self, df, exclude_name):
