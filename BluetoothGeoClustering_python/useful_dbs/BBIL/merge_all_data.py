@@ -15,9 +15,10 @@ for exp_folder in db_params.exp_folders:
             curr_table = curr_table.rename(columns={'Datetime': 'time'})
             curr_table.data_kind = data_kind
             curr_table.time = pd.to_datetime(curr_table.time)
-            start_ind = -file[::-1].find('_', 9)
-            end_ind = -len('_data.csv')
-            curr_table['DisplayName'] = file[start_ind:end_ind] + "_phone_BBIL"
+            # start_ind = -file[::-1].find('_', 9)
+            # end_ind = -len('_data.csv')
+            # curr_table['DisplayName'] = file[start_ind:end_ind] + "_phone_BBIL"
+            curr_table['DisplayName'] = [str(edgenodeid) + "_phone_BBIL" for edgenodeid in curr_table.edgenodeid]
             curr_table['setup'] = 'Phone in hand'
             curr_table.loc[curr_table.isSameRoom == 0, 'obstacle'] = 'Obstacle: wall'
             curr_table.loc[curr_table.isSameRoom == 1, 'obstacle'] = 'No Obstacle'
