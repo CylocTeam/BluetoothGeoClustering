@@ -10,6 +10,7 @@ class PlotFuncs:
         self.win_size_seconds = win_size_seconds
         self.tag_measurements = tag_measurements
         self.axes_size = 5
+        self.res_meter = 0.5
 
     def set_minor_axes_size(self, axis_size):
         self.axes_size = axis_size
@@ -17,10 +18,13 @@ class PlotFuncs:
     def set_window_size_second(self, win_size_second):
         self.win_size_second = win_size_second
 
+    def set_resolution(self, res_meter):
+        self.res_meter = res_meter
+
     def boxplot_func(self, show_measurements, title, y_label, plot_hue):
         plt.figure()
         if not plot_hue:
-            ax = sns.boxplot(x=np.round(show_measurements["distance"] * 4) / 4, y=show_measurements[y_label]
+            ax = sns.boxplot(x=np.round(show_measurements["distance"] /self.res_meter) *self.res_meter, y=show_measurements[y_label]
                              ).set_title(title)
         else:
             ax = sns.boxplot(x=np.round(show_measurements["distance"] * 4) / 4, y=show_measurements[y_label],
