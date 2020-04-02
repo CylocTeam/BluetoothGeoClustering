@@ -18,6 +18,7 @@ for exp_folder in db_params.exp_folders:
             start_ind = -file[::-1].find('_', 9)
             end_ind = -len('_data.csv')
             curr_table['DisplayName'] = file[start_ind:end_ind] + "_phone_BBIL"
+            curr_table['setup'] = 'Phone in hand'
             curr_table.loc[curr_table.isSameRoom == 0, 'obstacle'] = 'Obstacle: wall'
             curr_table.loc[curr_table.isSameRoom == 1, 'obstacle'] = 'No Obstacle'
 
