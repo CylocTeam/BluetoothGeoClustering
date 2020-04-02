@@ -17,11 +17,12 @@ for exp_folder in db_params.exp_folders:
             curr_table.time = pd.to_datetime(curr_table.time)
             start_ind = -file[::-1].find('_', 9)
             end_ind = -len('_data.csv')
-            curr_table.DisplayName = file[start_ind:end_ind]+"_phone_BBIL"
+            curr_table.DisplayName = file[start_ind:end_ind] + "_phone_BBIL"
+            curr_table.loc[curr_table.isSameRoom == 0, 'obstacle'] = 'Obstacle: wall'
+            curr_table.loc[curr_table.isSameRoom == 1, 'obstacle'] = 'No Obstacle'
+
             all_files = pd.concat([all_files, curr_table], ignore_index=True)
             exp_files = pd.concat([exp_files, curr_table], ignore_index=True)
             print(file)
     exp_files.to_pickle('tag_measurements_BBIL' + exp_folder + '.pkl')
 all_files.to_pickle('tag_measurements_BBIL_all.pkl')
-
-
