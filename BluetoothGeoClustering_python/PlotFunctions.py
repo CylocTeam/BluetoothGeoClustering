@@ -38,14 +38,18 @@ class PlotFuncs:
         ax.axes.yaxis.set_major_locator(MultipleLocator(self.axes_size))
 
     def plot_data(self, func, plot_func='violinplot', obstacle='No Obstacle', plot_hue=0, percent=90, margin=0,
-                  top_percent=80, bottom_percent=20):
+                  top_percent=80, bottom_percent=20, roll_by_2=1):
         DataFuncsObj = DataFuncs()
         DataFuncsObj.set_percent(percent)
         DataFuncsObj.set_margin(margin)
         DataFuncsObj.set_bottom_percent(bottom_percent)
         DataFuncsObj.set_top_percent(top_percent)
-        tag_rolling = DataFuncsObj.run_rolling_func_df_2_columns(self.tag_measurements, func, 'DisplayName',
-                                                                 'distance', 'rssi', self.win_size_seconds)
+        if roll_by_2:
+            tag_rolling = DataFuncsObj.run_rolling_func_df_2_columns(self.tag_measurements, func, 'DisplayName',
+                                                                     'distance', 'rssi', self.win_size_seconds)
+        else:
+            tag_rolling = DataFuncsObj.run_rolling_func_df(self.tag_measurements, func, 'DisplayName',
+                                                           'rssi', self.win_size_seconds)
         show_measurements = tag_rolling.where(tag_rolling.obstacle == obstacle)
         show_measurements = show_measurements.dropna(how='any').reset_index(drop=True)
         title = obstacle + " " + func + " - All setups"
