@@ -10,6 +10,7 @@ class PlotFuncs:
         self.win_size_seconds = win_size_seconds
         self.tag_measurements = tag_measurements
         self.axes_size = 5
+        self.res_meter = 0.5
 
     def set_minor_axes_size(self, axis_size):
         self.axes_size = axis_size
@@ -17,10 +18,13 @@ class PlotFuncs:
     def set_window_size_second(self, win_size_second):
         self.win_size_second = win_size_second
 
+    def set_resolution(self, res_meter):
+        self.res_meter = res_meter
+
     def boxplot_func(self, show_measurements, title, y_label, plot_hue):
         plt.figure()
         if not plot_hue:
-            ax = sns.boxplot(x=np.round(show_measurements["distance"] * 4) / 4, y=show_measurements[y_label]
+            ax = sns.boxplot(x=np.round(show_measurements["distance"] /self.res_meter) *self.res_meter, y=show_measurements[y_label]
                              ).set_title(title)
         else:
             ax = sns.boxplot(x=np.round(show_measurements["distance"] * 4) / 4, y=show_measurements[y_label],
@@ -38,14 +42,18 @@ class PlotFuncs:
         ax.axes.yaxis.set_major_locator(MultipleLocator(self.axes_size))
 
     def plot_data(self, func, plot_func='violinplot', obstacle='No Obstacle', plot_hue=0, percent=90, margin=0,
-                  top_percent=80, bottom_percent=20):
+                  top_percent=80, bottom_percent=20, roll_by_2=1):
         DataFuncsObj = DataFuncs()
         DataFuncsObj.set_percent(percent)
         DataFuncsObj.set_margin(margin)
         DataFuncsObj.set_bottom_percent(bottom_percent)
         DataFuncsObj.set_top_percent(top_percent)
-        tag_rolling = DataFuncsObj.run_rolling_func_df_2_columns(self.tag_measurements, func, 'DisplayName',
-                                                                 'distance', 'rssi', self.win_size_seconds)
+        if roll_by_2:
+            tag_rolling = DataFuncsObj.run_rolling_func_df_2_columns(self.tag_measurements, func, 'DisplayName',
+                                                                     'distance', 'rssi', self.win_size_seconds)
+        else:
+            tag_rolling = DataFuncsObj.run_rolling_func_df(self.tag_measurements, func, 'DisplayName',
+                                                           'rssi', self.win_size_seconds)
         show_measurements = tag_rolling.where(tag_rolling.obstacle == obstacle)
         show_measurements = show_measurements.dropna(how='any').reset_index(drop=True)
         title = obstacle + " " + func + " - All setups"

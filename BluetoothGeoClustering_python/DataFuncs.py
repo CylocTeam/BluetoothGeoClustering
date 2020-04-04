@@ -125,6 +125,9 @@ class DataFuncs:
         df_grouped = df.groupby(['DisplayName'])
         df_normalized = df_grouped.apply(lambda x:
                                          self.normalize_by_distance_single_displayname(x, norm_distance, setup))
-        df_normalized.index = df_normalized.index.droplevel(0)
+        try:
+            df_normalized.index = df_normalized.index.droplevel(0)
+        except Exception as c:
+            print(df.DisplayName.iloc[0])
 
         return df_normalized
