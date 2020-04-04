@@ -1,6 +1,7 @@
 import os
 import glob
 import pandas as pd
+import numpy as np
 import useful_dbs.BBIL.db_params as db_params
 
 all_files = pd.DataFrame([])
@@ -22,6 +23,7 @@ for exp_folder in db_params.exp_folders:
             curr_table['setup'] = 'Phone in hand'
             curr_table.loc[curr_table.isSameRoom == 0, 'obstacle'] = 'Obstacle: wall'
             curr_table.loc[curr_table.isSameRoom == 1, 'obstacle'] = 'No Obstacle'
+            curr_table.distance = np.round(curr_table.distance, 2)
 
             all_files = pd.concat([all_files, curr_table], ignore_index=True)
             exp_files = pd.concat([exp_files, curr_table], ignore_index=True)
