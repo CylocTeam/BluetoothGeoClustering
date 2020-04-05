@@ -59,6 +59,7 @@ class DataFuncs:
                 lambda x: self.percent_above_percentile_counts(x)),
             'different_between_percentiles': df[column_name].rolling(win_size, min_periods=1).apply(
                 lambda x: self.different_between_percentiles(x)),
+            'distance': df['distance'],
         }[func]
 
     def exclude_display_name_from_df(self, df, exclude_name):
