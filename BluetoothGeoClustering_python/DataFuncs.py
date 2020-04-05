@@ -43,24 +43,35 @@ class DataFuncs:
         return np.sum(series >= (percentile_number - self.margin))
 
     def switcher(self, df, func, column_name, win_size):
-        return {
-            'mean': df[column_name].rolling(win_size, min_periods=1).mean(),
-            'var': df[column_name].rolling(win_size, min_periods=1).var(),
-            'sum': df[column_name].rolling(win_size, min_periods=1).sum(),
-            'min': df[column_name].rolling(win_size, min_periods=1).min(),
-            'max': df[column_name].rolling(win_size, min_periods=1).max(),
-            'median': df[column_name].rolling(win_size, min_periods=1).median(),
-            'count': df[column_name].rolling(win_size, min_periods=1).count(),
-            'percentile': df[column_name].rolling(win_size, min_periods=1).apply(
-                lambda x: np.percentile(x, self.percent, interpolation='nearest')),
-            'above_percentile': df[column_name].rolling(win_size, min_periods=1).apply(
-                lambda x: self.percent_above_percentile(x)),
-            'above_percentile_counts': df[column_name].rolling(win_size, min_periods=1).apply(
-                lambda x: self.percent_above_percentile_counts(x)),
-            'different_between_percentiles': df[column_name].rolling(win_size, min_periods=1).apply(
-                lambda x: self.different_between_percentiles(x)),
-            'distance': df['distance'],
-        }[func]
+            if func == 'mean':
+                return df[column_name].rolling(win_size, min_periods=1).mean()
+            if func =='var':
+                return df[column_name].rolling(win_size, min_periods=1).var()
+            if func =='sum':
+                return df[column_name].rolling(win_size, min_periods=1).sum()
+            if func =='min':
+                return df[column_name].rolling(win_size, min_periods=1).min()
+            if func =='max':
+                return df[column_name].rolling(win_size, min_periods=1).max()
+            if func =='median':
+                return df[column_name].rolling(win_size, min_periods=1).median()
+            if func =='count':
+                return df[column_name].rolling(win_size, min_periods=1).count()
+            if func =='percentile':
+                return df[column_name].rolling(win_size, min_periods=1).apply(
+                    lambda x: np.percentile(x, self.percent, interpolation='nearest'))
+            if func =='above_percentile':
+                return df[column_name].rolling(win_size, min_periods=1).apply(
+                    lambda x: self.percent_above_percentile(x))
+            if func =='above_percentile_counts':
+                return df[column_name].rolling(win_size, min_periods=1).apply(
+                    lambda x: self.percent_above_percentile_counts(x))
+            if func =='different_between_percentiles':
+                return df[column_name].rolling(win_size, min_periods=1).apply(
+                    lambda x: self.different_between_percentiles(x))
+            if func =='distance':
+                return df['distance']
+
 
     def exclude_display_name_from_df(self, df, exclude_name):
         df_exclude = df[df.DisplayName != exclude_name]
@@ -110,12 +121,12 @@ class DataFuncs:
         if len(np.where(unique_distances == norm_distance)[0]) == 0:
             norm_distance = unique_distances[np.argmin(np.abs(unique_distances - norm_distance))]
             if ((norm_distance - norm_distance_old) <= res) or (not remove_unfit_data):
-                print('#C: '+df.DisplayName.iloc[0] + ':There is no ' + str(norm_distance_old) +
-                    'm distance, Therefore we use ' + str(norm_distance) + 'm to normalize')
-        if ((norm_distance - norm_distance_old) > res) and ( remove_unfit_data):
+                print('#C: ' + df.DisplayName.iloc[0] + ':There is no ' + str(norm_distance_old) +
+                      'm distance, Therefore we use ' + str(norm_distance) + 'm to normalize')
+        if ((norm_distance - norm_distance_old) > res) and (remove_unfit_data):
             df_normalized = df.copy()
             df_normalized.rssi = np.nan
-            print('#R: '+df.DisplayName.iloc[0] + ':There is no ' + str(norm_distance_old) +
+            print('#R: ' + df.DisplayName.iloc[0] + ':There is no ' + str(norm_distance_old) +
                   'm distance, Therefore we remove the device from data')
         else:
             if setup is None:
@@ -132,7 +143,8 @@ class DataFuncs:
     def normalize_by_distance(self, df, norm_distance, setup=None, remove_unfit_data=False, res=0.5):
         df_grouped = df.groupby(['DisplayName'])
         df_normalized = df_grouped.apply(lambda x:
-                                         self.normalize_by_distance_single_displayname(x, norm_distance, setup, remove_unfit_data, res))
+                                         self.normalize_by_distance_single_displayname(x, norm_distance, setup,
+                                                                                       remove_unfit_data, res))
         try:
             df_normalized.index = df_normalized.index.droplevel(0)
         except Exception as c:
@@ -141,3 +153,12 @@ class DataFuncs:
         df_normalized = df_normalized.dropna(how='any').reset_index(drop=True)
 
         return df_normalized
+
+#
+# DataFuncsObj = DataFuncs()
+# DB_pickle = r'useful_dbs/BBIL/tag_measurements_BBIL_all.pkl'
+# all_tag_measurements = pd.read_pickle(DB_pickle)
+# rolling_by_2 = 0
+# setup = 'Phone in hand'
+# plot_tag_data = DataFuncsObj.normalize_by_distance(all_tag_measurements, 1, setup, True, 0.25)
+# distances = DataFuncsObj.run_rolling_func_df(plot_tag_data, 'distance', 'DisplayName', 'rssi', 20)
