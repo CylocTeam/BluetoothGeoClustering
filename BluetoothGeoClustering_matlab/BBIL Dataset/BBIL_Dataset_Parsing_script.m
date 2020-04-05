@@ -1,6 +1,6 @@
 % This script parses BLE Beacon Indoor Localization Dataset (BBIL Dataset).
 % The parsing is divided into two stages:
-% 1) Parse RSSI Data of each user's BLE beacon (Transmitter), as recieved by the Raspberry Pis (Recievers).
+% 1) Parse RSSI Data of each user's BLE beacon (Transmitter), as received by the Raspberry Pis (receivers).
 % 2) Union of the data of all users into a matrix of dimensions:
 %       num_of_ble_beacon_measurements x num_of_raspberry_pi_edge_nodes
 
@@ -46,7 +46,7 @@ I_room = imread([dir_path, experiment_dirs{exp_idx}, 'room.png']);
 
 open('experiment2.fig'); suptitle('True locations of devices and edgenode locations'); title('(results of section 1.b.)')
 figure; image(imrotate(I_room,90,'bilinear')); title('Map of Location 1'); set(gca,'yDir','normal')
-%% 1.b. Parse RSSI Data of each user's BLE beacon, as recieved by the Raspberry Pis:
+%% 1.b. Parse RSSI Data of each user's BLE beacon, as received by the Raspberry Pis:
 for exp_idx = 1:length(experiment_dirs)
     % Edges Deteail per beaconid:
     edges_details_path = [dir_path, experiment_dirs{exp_idx}, 'edges.csv'];
@@ -105,7 +105,7 @@ for exp_idx = 1:length(experiment_dirs)
     hold off
 end
 
-%% 2. Parse RSSI Data of each user's BLE beacon, as recieved by the Raspberry Pis:
+%% 2. Parse RSSI Data of each user's BLE beacon, as received by the Raspberry Pis:
 for exp_idx = 1:length(experiment_dirs)
     % Edges Deteail per beaconid:
     edges_details_path = [dir_path, experiment_dirs{exp_idx}, 'edges.csv'];
@@ -119,24 +119,37 @@ for exp_idx = 1:length(experiment_dirs)
         
         exp_ble_rssi_mat = edgenodeid_vec;
         exp_room_index_vec = [];
+        exp_distance_mat = [];
+        exp_user_loc_mat = [];
+        exp_user_beacon_id_vec = [];
+        
         for data_idx = 1:length(data_filenames_per_beaconid)
             data_per_beacon_id = readtable([target_dir, data_filenames_per_beaconid{data_idx}],'Delimiter',',');
             date_time_values = unique(data_per_beacon_id.Datetime);
             
             exp_ble_rssi_sub_mat = nan+zeros(length(edgenodeid_vec), length(date_time_values));
             exp_room_index_sub_vec = data_per_beacon_id(1:size(data_per_beacon_id,1)/size(date_time_values,1):end,:).isSameRoom.';
+            exp_user_beacon_id_sub_vec = data_per_beacon_id(1:size(data_per_beacon_id,1)/size(date_time_values,1):end,:).beaconid.';
+            exp_distance_sub_mat = nan+zeros(length(edgenodeid_vec), length(date_time_values));
+            exp_user_loc_sub_mat = [...
+                data_per_beacon_id(1:size(data_per_beacon_id,1)/size(date_time_values,1):end,:).realx.';...
+                data_per_beacon_id(1:size(data_per_beacon_id,1)/size(date_time_values,1):end,:).realy.'];
+            
             for edgenodeid_idx = 1:length(edgenodeid_vec)
                 data_per_edgenodeid = data_per_beacon_id(data_per_beacon_id.edgenodeid == edgenodeid_vec(edgenodeid_idx),:);
                 if ~isempty(data_per_edgenodeid)
                     exp_ble_rssi_sub_mat(edgenodeid_idx, :) = data_per_edgenodeid.rssi.';
+                    exp_distance_sub_mat(edgenodeid_idx, :) = data_per_edgenodeid.distance.';
                 end
             end
             
             exp_ble_rssi_mat = [exp_ble_rssi_mat, exp_ble_rssi_sub_mat];
             exp_room_index_vec = [exp_room_index_vec, exp_room_index_sub_vec];
+            exp_distance_mat = [exp_distance_mat, exp_distance_sub_mat];
+            exp_user_loc_mat = [exp_user_loc_mat, exp_user_loc_sub_mat];
+            exp_user_beacon_id_vec = [exp_user_beacon_id_vec, exp_user_beacon_id_sub_vec];
         end
         
-        save([experiment_dirs{exp_idx}(1:end-1), '_', folder_names{folder_idx}(1:end-1), '_ble_rssi_mat.mat'],'exp_ble_rssi_mat');
-        save([experiment_dirs{exp_idx}(1:end-1), '_', folder_names{folder_idx}(1:end-1), '_room_index_vec.mat'],'exp_room_index_vec');
+        save([experiment_dirs{exp_idx}(1:end-1), '_', folder_names{folder_idx}(1:end-1), '_ble_rssi_mat.mat'],'exp_ble_rssi_mat','exp_room_index_vec','exp_distance_mat','exp_user_beacon_id_vec','exp_user_loc_mat');
     end
 end
