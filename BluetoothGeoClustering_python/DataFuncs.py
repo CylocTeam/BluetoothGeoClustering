@@ -69,9 +69,6 @@ class DataFuncs:
             if func =='different_between_percentiles':
                 return df[column_name].rolling(win_size, min_periods=1).apply(
                     lambda x: self.different_between_percentiles(x))
-            if func =='distance':
-                return df['distance']
-
 
     def exclude_display_name_from_df(self, df, exclude_name):
         df_exclude = df[df.DisplayName != exclude_name]
@@ -154,11 +151,3 @@ class DataFuncs:
 
         return df_normalized
 
-#
-# DataFuncsObj = DataFuncs()
-# DB_pickle = r'useful_dbs/BBIL/tag_measurements_BBIL_all.pkl'
-# all_tag_measurements = pd.read_pickle(DB_pickle)
-# rolling_by_2 = 0
-# setup = 'Phone in hand'
-# plot_tag_data = DataFuncsObj.normalize_by_distance(all_tag_measurements, 1, setup, True, 0.25)
-# distances = DataFuncsObj.run_rolling_func_df(plot_tag_data, 'distance', 'DisplayName', 'rssi', 20)
