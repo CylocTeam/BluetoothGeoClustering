@@ -22,7 +22,7 @@ class PlotFuncs:
         self.res_meter = res_meter
 
     def boxplot_func(self, show_measurements, title, y_label, plot_hue):
-        plt.figure()
+        plt.figure(figsize=(30, 20))
         if not plot_hue:
             ax = sns.boxplot(x=np.round(show_measurements["distance"] /self.res_meter) *self.res_meter, y=show_measurements[y_label]
                              ).set_title(title)
@@ -32,7 +32,7 @@ class PlotFuncs:
         ax.axes.yaxis.set_major_locator(MultipleLocator(self.axes_size))
 
     def violinplot_func(self, show_measurements, title, y_label, plot_hue):
-        plt.figure()
+        plt.figure(figsize=(30,20))
         if not plot_hue:
             ax = sns.violinplot(x=np.round(show_measurements["distance"] * self.res_meter) / self.res_meter,
                                 y=show_measurements[y_label]).set_title(title)
@@ -40,6 +40,7 @@ class PlotFuncs:
             ax = sns.violinplot(x=np.round(show_measurements["distance"] * self.res_meter) / self.res_meter,
                                 y=show_measurements[y_label], hue=show_measurements["DisplayName"]).set_title(title)
         ax.axes.yaxis.set_major_locator(MultipleLocator(self.axes_size))
+
 
     def plot_data(self, func, plot_func='violinplot', obstacle='No Obstacle', plot_hue=0, percent=90, margin=0,
                   top_percent=80, bottom_percent=20, roll_by_2=1):
