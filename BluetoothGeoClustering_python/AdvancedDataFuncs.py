@@ -3,7 +3,8 @@ import numpy as np
 
 
 class AdvancedDataFuncs:
-    def __init__(self, window_sec, df, func='mean', func_column='rssi', receiver_column='edgenodeid', scanned_column = 'beaconid'):
+    def __init__(self, window_sec, df, func='mean', func_column='rssi', receiver_column='edgenodeid',
+                 scanned_column='beaconid'):
         self.window = window_sec
         self.df = df
         self.receiver_column = receiver_column
