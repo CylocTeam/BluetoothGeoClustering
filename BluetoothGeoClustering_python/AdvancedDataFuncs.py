@@ -38,11 +38,29 @@ class AdvancedDataFuncs:
         if self.func == 'counts':
             return df[self.func_column].shape[0]
 
-
     def get_union_vecs(self, df):
         df_grouped = df.groupby(self.receiver_column)
+        unique_scans = pd.unique(df[self.scanned_column])
+        df_grouped.apply(lambda x: self.apply_func_on_unique(x, unique_scans))
 
-    def run_rolling_funcs(self):
+    def apply_func_on_unique(self, df, unique_scans):
+        """
+        apply_func_on_unique returns df_scans
+        Input:
+        Output:
+            df_scans : dataframe that contains 3 columns:
+                scan_device_name, reciver_name, results of the wanted func.
+                df_scans size len(unique_scans)x3
+        """
+        df_scans = pd.DataFrame([])
+        df_scans[self.scanned_column] = unique_scans
+        df_scans[self.receiver_column] = df[self.receiver_column][0]
+        df_grouped = df.groupby(self.scanned_column)
+        func_result = df_grouped.apply(lambda x: self.apply_func(x))
+
+        return df_scans
+
+    def run_funcs(self):
         df_index = self.df.copy()
         df_index.index = df_index.time
         df_index = df_index.sort_index()
