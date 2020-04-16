@@ -73,4 +73,6 @@ class AdvancedDataFuncs:
 
 DB_pickle = r'useful_dbs/BBIL/tag_measurements_BBIL_all.pkl'
 all_tag_measurements = pd.read_pickle(DB_pickle)
+AdvancedDataFuncsObj = AdvancedDataFuncs(60, all_tag_measurements)
+AdvancedDataFuncsObj.run_funcs()
 pass
