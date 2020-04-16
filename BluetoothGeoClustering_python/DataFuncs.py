@@ -42,33 +42,47 @@ class DataFuncs:
         percentile_number = np.percentile(series, self.percent, interpolation='nearest')
         return np.sum(series >= (percentile_number - self.margin))
 
+    def var_not_in_db(self, series):
+        not_in_db = np.power(10, series / 10)
+        return np.var(not_in_db)
+
+    def mean_not_in_db(self, series):
+        not_in_db = np.power(10, series / 10)
+        return np.mean(not_in_db)
+
     def switcher(self, df, func, column_name, win_size):
-            if func == 'mean':
-                return df[column_name].rolling(win_size, min_periods=1).mean()
-            if func =='var':
-                return df[column_name].rolling(win_size, min_periods=1).var()
-            if func =='sum':
-                return df[column_name].rolling(win_size, min_periods=1).sum()
-            if func =='min':
-                return df[column_name].rolling(win_size, min_periods=1).min()
-            if func =='max':
-                return df[column_name].rolling(win_size, min_periods=1).max()
-            if func =='median':
-                return df[column_name].rolling(win_size, min_periods=1).median()
-            if func =='count':
-                return df[column_name].rolling(win_size, min_periods=1).count()
-            if func =='percentile':
-                return df[column_name].rolling(win_size, min_periods=1).apply(
-                    lambda x: np.percentile(x, self.percent, interpolation='nearest'))
-            if func =='above_percentile':
-                return df[column_name].rolling(win_size, min_periods=1).apply(
-                    lambda x: self.percent_above_percentile(x))
-            if func =='above_percentile_counts':
-                return df[column_name].rolling(win_size, min_periods=1).apply(
-                    lambda x: self.percent_above_percentile_counts(x))
-            if func =='different_between_percentiles':
-                return df[column_name].rolling(win_size, min_periods=1).apply(
-                    lambda x: self.different_between_percentiles(x))
+        if func == 'mean':
+            return df[column_name].rolling(win_size, min_periods=1).mean()
+        if func == 'var':
+            return df[column_name].rolling(win_size, min_periods=1).var()
+        if func == 'sum':
+            return df[column_name].rolling(win_size, min_periods=1).sum()
+        if func == 'min':
+            return df[column_name].rolling(win_size, min_periods=1).min()
+        if func == 'max':
+            return df[column_name].rolling(win_size, min_periods=1).max()
+        if func == 'median':
+            return df[column_name].rolling(win_size, min_periods=1).median()
+        if func == 'count':
+            return df[column_name].rolling(win_size, min_periods=1).count()
+        if func == 'percentile':
+            return df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: np.percentile(x, self.percent, interpolation='nearest'))
+        if func == 'above_percentile':
+            return df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: self.percent_above_percentile(x))
+        if func == 'above_percentile_counts':
+            return df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: self.percent_above_percentile_counts(x))
+        if func == 'different_between_percentiles':
+            return df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: self.different_between_percentiles(x))
+        if func == 'var_not_in_db':
+            return df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: self.var_not_in_db(x))
+        if func == 'mean_not_in_db':
+            return df[column_name].rolling(win_size, min_periods=1).apply(
+                lambda x: self.mean_not_in_db(x))
 
     def exclude_display_name_from_df(self, df, exclude_name):
         df_exclude = df[df.DisplayName != exclude_name]
@@ -150,4 +164,3 @@ class DataFuncs:
         df_normalized = df_normalized.dropna(how='any').reset_index(drop=True)
 
         return df_normalized
-
