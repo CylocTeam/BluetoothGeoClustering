@@ -16,7 +16,7 @@ def start_pipe(df):
 
 
 def round_distance(df, res):
-    df['round_distance'] = np.round(df["distance"] * res_meter) / res_meter
+    df['round_distance'] = np.round(df["distance"] / res_meter) * res_meter
     return df
 
 
@@ -33,8 +33,8 @@ def agg_funcs_each_distance(df):
 
 def normalized_rssi_not_db(df, norm_distance, res_norm):
     round_distance = np.round(df["distance"] / res_norm) * res_norm
-    mean_rssi = np.mean(df['rssi'].loc[round_distance == norm_distance])
-    df['normalized_rssi'] = df['rssi'] - mean_rssi
+    median_rssi = np.median(df['rssi'].loc[round_distance == norm_distance])
+    df['normalized_rssi'] = df['rssi'] - median_rssi
     return df
 
 
