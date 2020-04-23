@@ -32,7 +32,7 @@ def agg_funcs_each_distance(df):
 
 
 def normalized_rssi_not_db(df, norm_distance, res_norm):
-    round_distance = np.round(df["distance"] * res_norm) / res_norm
+    round_distance = np.round(df["distance"] / res_norm) * res_norm
     mean_rssi = np.mean(df['rssi'].loc[round_distance == norm_distance])
     df['normalized_rssi'] = df['rssi'] - mean_rssi
     return df
