@@ -16,12 +16,12 @@ def start_pipe(df):
 
 
 def round_distance(df, res):
-    df['round_distance'] = np.round(df["distance"] * res_meter) / res_meter
+    df['round_distance'] = np.round(df["distance"] / res_meter) * res_meter
     return df
 
 
 def rssi_not_db(df):
-    df['rssi_not_db'] = np.power(10, df['rssi'] / 10)
+    df['rssi_not_db'] = np.power(10, df['normalized_rssi'] / 10)
     return df
 
 
@@ -32,9 +32,9 @@ def agg_funcs_each_distance(df):
 
 
 def normalized_rssi_not_db(df, norm_distance, res_norm):
-    round_distance = np.round(df["distance"] * res_norm) / res_norm
-    mean_rssi = np.mean(df['rssi_not_db'].loc[round_distance == norm_distance])
-    df['normalized_rssi'] = df['rssi_not_db'] - mean_rssi
+    round_distance = np.round(df["distance"] / res_norm) * res_norm
+    median_rssi = np.median(df['rssi'].loc[round_distance == norm_distance])
+    df['normalized_rssi'] = df['rssi'] - median_rssi
     return df
 
 
@@ -46,9 +46,9 @@ if __name__ == "__main__":
     res_norm = res_meter
 
     simulation_data = (all_tag_measurements.pipe(start_pipe)
-                       .pipe(rssi_not_db)
                        .pipe(normalized_rssi_not_db, norm_distance, res_norm)
+                       .pipe(rssi_not_db)
                        .pipe(round_distance, res_meter)
                        .pipe(agg_funcs_each_distance))
 
-    simulation_data
+    simulation_data.to_pickle('simulation_data.pkl')
