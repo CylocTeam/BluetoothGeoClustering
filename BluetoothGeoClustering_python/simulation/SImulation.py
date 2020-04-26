@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from simulation.Device import Device
 
+simulation_default_time = 1000
 
 class Simulation:
     def __init__(self, simulation_duration=-1, grid_res_m=0.1, grid_size_m=100, fps=1):
@@ -47,3 +48,10 @@ class Simulation:
 
     def run_simulation(self):
         device_class = Device()
+        if self.simulation_duration == -1:
+            max_times = self.devices['start_time'] + self.devices['duration']
+            max_times = max_times.loc[self.devices['duration']!=-1]
+            if not np.empty(max_times):
+                self.simulation_duration = np.max(max_times)
+            else:
+                self.simulation_duration = simulation_default_time
