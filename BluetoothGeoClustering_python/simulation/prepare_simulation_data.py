@@ -51,4 +51,4 @@ if __name__ == "__main__":
                        .pipe(round_distance, res_meter)
                        .pipe(agg_funcs_each_distance))
 
-    simulation_data
+    simulation_data.to_pickle('simulation_data.pkl')
