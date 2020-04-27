@@ -44,8 +44,24 @@ class Simulation:
     def set_optional_theta_res_degree(self, res):
         self.theta_direction_options = np.arange(0, 360, res)
 
+    def set_device_location(self, device_id, x, y):
+        device = self.devices.loc[self.devices['device_id'] == device_id]
+        device['x'] = x
+        device['y'] = y
+        self.devices.loc[self.devices['device_id'] == device_id] = device
+
     def get_devices(self):
         return self.devices
+
+    def get_current_simulation_duration(self):
+        if self.simulation_duration == -1:
+            max_times = self.devices['start_time'] + self.devices['duration']
+            max_times = max_times.loc[self.devices['duration'] != -1]
+            if not np.empty(max_times):
+                self.simulation_duration = np.max(max_times)
+            else:
+                self.simulation_duration = simulation_default_time
+        return self.simulation_duration
 
     def add_device(self, device, start_time=0, duration=-1, x=-1, y=-1):
         """
