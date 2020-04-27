@@ -14,6 +14,7 @@ class Simulation:
         self.grid_size = grid_size_m
         self.devices = pd.DataFrame(columns=['device', 'start_time', 'end_time'])
         self.devices_location = []
+        self.theta_direction_options = np.arange(0, 360, 90)
 
     def set_simulation_duration(self, duration):
         """
@@ -32,6 +33,12 @@ class Simulation:
     def set_fps(self, fps):
         self.fps = fps
 
+    def set_optional_theta_vec_degree(self, azimuth_vec):
+        self.theta_direction_options = azimuth_vec
+
+    def set_optional_theta_res_degree(self, res):
+        self.theta_direction_options = np.arange(0, 360, res)
+
     def get_devices(self):
         return self.devices
 
@@ -47,7 +54,7 @@ class Simulation:
                          -1 till the end of the simulation.
             x,y - current location of the added device. -1 for random point.
         """
-        df_current = pd.DataFrame(columns=['device', 'start_time', 'duration', 'device_id','x','y'])
+        df_current = pd.DataFrame(columns=['device', 'start_time', 'duration', 'device_id', 'x', 'y'])
         df_current['device'] = device
         df_current['start_time'] = start_time
         df_current['duration'] = duration
