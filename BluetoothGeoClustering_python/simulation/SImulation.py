@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import time
 import psychopy.tools.coordinatetools as coor
+from scipy.spatial import distance
 from simulation.Device import Device
 
 simulation_default_time = 1000
@@ -18,7 +19,7 @@ class Simulation:
         self.theta_direction_options = np.arange(0, 360, 90)
         self.simulation_data_path = 'simulation_data.pkl'
 
-    def set_simulation_data_path(self,path):
+    def set_simulation_data_path(self, path):
         self.simulation_data_path = path
 
     def set_simulation_duration(self, duration):
@@ -75,13 +76,13 @@ class Simulation:
                          -1 till the end of the simulation.
             x,y - current location of the added device. -1 for random point.
         """
-        df_current = pd.DataFrame(columns=['device', 'start_time', 'duration', 'device_id', 'x', 'y'])
-        df_current['device'] = device
-        df_current['start_time'] = start_time
-        df_current['duration'] = duration
-        df_current['device_id'] = self.devices.shape[0]
-
-        self.devices = self.devices.append(df_current, ignore_index=True)
+        data = {'device': [device],
+                'start_time': [start_time],
+                'duration': [duration],
+                'device_id': [self.devices.shape[0]],
+                'x': [x],
+                'y': [y]}
+        self.devices = self.devices.append(pd.DataFrame(data=data), ignore_index=True)
 
     def check_locations(self):
         """
@@ -111,7 +112,7 @@ class Simulation:
 
     def run_simulation(self):
         device_class = Device()
-        self.devices_location = pd.df(columns=['device_id', 'x', 'y', 'time'])
+        self.devices_location = pd.DataFrame(columns=['device_id', 'x', 'y', 'time'])
         time_vec = np.arange(0, self.get_current_simulation_duration(), 1 / self.fps)
         self.check_locations()
         for time in time_vec:
