@@ -83,19 +83,46 @@ class Simulation:
 
         self.devices = self.devices.append(df_current, ignore_index=True)
 
-    def get_current_simulation_duration(self):
-        if self.simulation_duration == -1:
-            max_times = self.devices['start_time'] + self.devices['duration']
-            max_times = max_times.loc[self.devices['duration'] != -1]
-            if not np.empty(max_times):
-                self.simulation_duration = np.max(max_times)
-            else:
-                self.simulation_duration = simulation_default_time
-        return self.simulation_duration
+    def check_locations(self):
+        """
+        check_locations generate random locations if needed (For x,y = -1).
+        """
+        loc_options = np.arange(0, self.grid_size, self.grid_res)
+        for device in self.devices:
+            if device['x'] == -1:
+                x = np.random.choice(loc_options)
+                self.set_device_location(device['device_id'], x, device['y'])
+            if device['y'] == -1:
+                y = np.random.choice(loc_options)
+                self.set_device_location(device['device_id'], device['x'], y)
+
+    def update_device_location(self, device_id):
+        device = self.devices.loc[self.devices['device_id'] == device_id]
+        r = device.get_velocity / self.fps
+        theta = np.random.choice(self.theta_direction_options)
+        x_add, y_add = coor.pol2cart(theta, r, units='deg')
+        x = np.min(np.max(0, device['x'] + x_add), self.grid_size)
+        y = np.min(np.max(0, device['y'] + y_add), self.grid_size)
+        self.set_device_location(device_id, x, y)
+
+    def update_devices_locations(self):
+        for device_id in pd.unique(self.devices['device_id']):
+            self.update_device_location(device_id)
 
     def run_simulation(self):
         device_class = Device()
         self.devices_location = pd.df(columns=['device_id', 'x', 'y', 'time'])
+        time_vec = np.arange(0, self.get_current_simulation_duration(), 1 / self.fps)
+        self.check_locations()
+        for time in time_vec:
+            # current_df = pd.DataFrame(columns=['device_id', 'x', 'y', 'time'])
+            current_df = self.devices[['device_id', 'x', 'y']]
+            current_df['time'] = time
+            self.devices_location = self.devices_location.append(current_df, ignore_index=True)
+            # current_df['device_id'] = self.devices['device_id']
+            # current_df['x'] = self.devices['x']
+            # current_df['y'] = self.devices['y']
+
 
     def generate_receptions(self):
         pass
