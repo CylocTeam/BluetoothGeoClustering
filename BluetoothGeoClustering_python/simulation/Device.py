@@ -11,11 +11,11 @@ class Device:
             self.velocity = velocity
         else:
             # mean human velocity 1.3 m/s and 4 m/s is fast runner
-            velocity = np.min(np.max(0, np.random.normal(1.3, 0.3, 1)), 4)
+            velocity = min(max(0, np.random.normal(1.3, 0.3, 1)[0]), 4)
         self.noise_addition = noise_addition_to_vel
 
     def get_velocity(self, sigma_vel=0.2):
-        return np.min(np.max(0, np.random.normal(self.velocity, self.noise_addition * sigma_vel, 1)), 4)
+        return min(max(0, np.random.normal(self.velocity, self.noise_addition * sigma_vel, 1)[0]), 4)
 
     def set_velocity(self, velocity):
         self.velocity = velocity
