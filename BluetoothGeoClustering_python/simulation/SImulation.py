@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import time
 from simulation.Device import Device
 
 simulation_default_time = 1000
@@ -34,7 +35,7 @@ class Simulation:
     def get_devices(self):
         return self.devices
 
-    def add_device(self, device, start_time=0, duration=-1):
+    def add_device(self, device, start_time=0, duration=-1, x=-1, y=-1):
         """
         add_device adds device to simulation devices.
         Input:
@@ -44,8 +45,9 @@ class Simulation:
             duration - The duration time the device is in the simulation.
                          The time is from the start_time  in seconds.
                          -1 till the end of the simulation.
+            x,y - current location of the added device. -1 for random point.
         """
-        df_current = pd.DataFrame(columns=['device', 'start_time', 'duration', 'device_id'])
+        df_current = pd.DataFrame(columns=['device', 'start_time', 'duration', 'device_id','x','y'])
         df_current['device'] = device
         df_current['start_time'] = start_time
         df_current['duration'] = duration
@@ -62,7 +64,6 @@ class Simulation:
             else:
                 self.simulation_duration = simulation_default_time
         return self.simulation_duration
-
 
     def run_simulation(self):
         device_class = Device()
