@@ -12,6 +12,7 @@ class Simulation:
         self.simulation_duration = simulation_duration
         self.grid_size = grid_size_m
         self.devices = pd.DataFrame(columns=['device', 'start_time', 'end_time'])
+        self.devices_location = []
 
     def set_simulation_duration(self, duration):
         """
@@ -29,6 +30,9 @@ class Simulation:
 
     def set_fps(self, fps):
         self.fps = fps
+
+    def get_devices(self):
+        return self.devices
 
     def add_device(self, device, start_time=0, duration=-1):
         """
@@ -59,8 +63,10 @@ class Simulation:
                 self.simulation_duration = simulation_default_time
         return self.simulation_duration
 
+
     def run_simulation(self):
         device_class = Device()
         self.devices_location = pd.df(columns=['device_id', 'x', 'y', 'time'])
 
-    
+    def generate_receptions(self):
+        pass
