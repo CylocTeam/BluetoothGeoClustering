@@ -122,7 +122,21 @@ class Simulation:
             # current_df['device_id'] = self.devices['device_id']
             # current_df['x'] = self.devices['x']
             # current_df['y'] = self.devices['y']
-
+        print(self.devices_location)
+        self.generate_receptions()
 
     def generate_receptions(self):
-        pass
+        data_variables = pd.read_pickle(self.simulation_data_path)
+        for time in pd.unique(self.devices_location['time']):
+            current_ind = self.devices_location['time'] == time
+            current_devices = self.devices_location.loc[current_ind]
+            points = np.hstack((current_devices['x'], current_devices['y']))
+            distance_map = distance(points, points, 'euclidean')
+            pass
+
+
+if __name__ == "__main__":
+    sim = Simulation(10)
+    sim.add_device(Device(1, 0), 0, 10, 1, 5)
+    sim.add_device(Device(1.3, 0), 0, 10, 2, 5)
+    sim.run_simulation()
