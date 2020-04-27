@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import time
+import psychopy.tools.coordinatetools as coor
 from simulation.Device import Device
 
 simulation_default_time = 1000
@@ -11,10 +12,14 @@ class Simulation:
         self.fps = fps
         self.grid_res = grid_res_m
         self.simulation_duration = simulation_duration
-        self.grid_size = grid_size_m
+        self.grid_size = grid_size_m + 1
         self.devices = pd.DataFrame(columns=['device', 'start_time', 'end_time'])
         self.devices_location = []
         self.theta_direction_options = np.arange(0, 360, 90)
+        self.simulation_data_path = 'simulation_data.pkl'
+
+    def set_simulation_data_path(self,path):
+        self.simulation_data_path = path
 
     def set_simulation_duration(self, duration):
         """
@@ -28,7 +33,7 @@ class Simulation:
         self.grid_res = res_m
 
     def set_grid_size(self, grid_size):
-        self.grid_size = grid_size
+        self.grid_size = grid_size + 1
 
     def set_fps(self, fps):
         self.fps = fps
