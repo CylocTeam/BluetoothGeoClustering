@@ -14,7 +14,7 @@ class Simulation:
         self.grid_res = grid_res_m
         self.simulation_duration = simulation_duration
         self.grid_size = grid_size_m + 1
-        self.devices = pd.DataFrame(columns=['device','deviec_id' ,'start_time', 'duration', 'x','y'])
+        self.devices = pd.DataFrame(columns=['device', 'device_id', 'start_time', 'duration', 'x', 'y'])
         self.devices_location = []
         self.theta_direction_options = np.arange(0, 360, 90)
         self.simulation_data_path = 'simulation_data.pkl'
