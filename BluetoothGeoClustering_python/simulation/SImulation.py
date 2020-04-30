@@ -100,7 +100,7 @@ class Simulation:
 
     def update_device_location(self, device_id):
         device = self.devices.loc[self.devices['device_id'] == device_id]
-        r = device.get_velocity / self.fps
+        r = device.device[0].get_velocity() / self.fps
         theta = np.random.choice(self.theta_direction_options)
         x_add, y_add = coor.pol2cart(theta, r, units='deg')
         x = np.min(np.max(0, device['x'] + x_add), self.grid_size)
@@ -122,6 +122,7 @@ class Simulation:
             current_df.insert(2, "time", np.ones_like(current_df.x)*time, True)
             self.devices_location = self.devices_location.append(current_df, ignore_index=True)
         #     Make a step
+            self.update_devices_locations()
         print(self.devices_location)
         self.generate_receptions()
 
