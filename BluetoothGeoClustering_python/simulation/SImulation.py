@@ -89,7 +89,8 @@ class Simulation:
         check_locations generate random locations if needed (For x,y = -1).
         """
         loc_options = np.arange(0, self.grid_size, self.grid_res)
-        for device in self.devices.iterrows():
+        for device in (self.devices.iterrows()):
+            device = device[1]
             if device['x'] == -1:
                 x = np.random.choice(loc_options)
                 self.set_device_location(device['device_id'], x, device['y'])
