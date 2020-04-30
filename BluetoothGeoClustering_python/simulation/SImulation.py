@@ -103,8 +103,8 @@ class Simulation:
         r = device.device[0].get_velocity() / self.fps
         theta = np.random.choice(self.theta_direction_options)
         x_add, y_add = coor.pol2cart(theta, r, units='deg')
-        x = np.min(np.max(0, device['x'] + x_add), self.grid_size)
-        y = np.min(np.max(0, device['y'] + y_add), self.grid_size)
+        x = min(max(0, device['x'][0] + x_add), self.grid_size-1)
+        y = min(max(0, device['y'][0] + y_add), self.grid_size-1)
         self.set_device_location(device_id, x, y)
 
     def update_devices_locations(self):
