@@ -119,11 +119,9 @@ class Simulation:
         for time in time_vec:
             # current_df = pd.DataFrame(columns=['device_id', 'x', 'y', 'time'])
             current_df = self.devices[['device_id', 'x', 'y']]
-            current_df['time'] = time
+            current_df.insert(2, "time", np.ones_like(current_df.x)*time, True)
             self.devices_location = self.devices_location.append(current_df, ignore_index=True)
-            # current_df['device_id'] = self.devices['device_id']
-            # current_df['x'] = self.devices['x']
-            # current_df['y'] = self.devices['y']
+        #     Make a step
         print(self.devices_location)
         self.generate_receptions()
 
