@@ -14,7 +14,7 @@ class Simulation:
         self.grid_res = grid_res_m
         self.simulation_duration = simulation_duration
         self.grid_size = grid_size_m + 1
-        self.devices = pd.DataFrame(columns=['device', 'start_time', 'end_time'])
+        self.devices = pd.DataFrame(columns=['device','deviec_id' ,'start_time', 'duration', 'x','y'])
         self.devices_location = []
         self.theta_direction_options = np.arange(0, 360, 90)
         self.simulation_data_path = 'simulation_data.pkl'
@@ -89,7 +89,7 @@ class Simulation:
         check_locations generate random locations if needed (For x,y = -1).
         """
         loc_options = np.arange(0, self.grid_size, self.grid_res)
-        for device in self.devices:
+        for device in self.devices.iterrows():
             if device['x'] == -1:
                 x = np.random.choice(loc_options)
                 self.set_device_location(device['device_id'], x, device['y'])
