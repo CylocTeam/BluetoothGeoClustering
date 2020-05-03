@@ -4,8 +4,10 @@ import time
 import psychopy.tools.coordinatetools as coor
 from scipy.spatial import distance
 from simulation.Device import Device
+# pd.options.mode.chained_assignment = None  # default='warn'
 
 simulation_default_time = 1000
+
 
 
 class Simulation:
@@ -46,10 +48,9 @@ class Simulation:
         self.theta_direction_options = np.arange(0, 360, res)
 
     def set_device_location(self, device_id, x, y):
-        device = self.devices.loc[self.devices['device_id'] == device_id]
-        device['x'] = x
-        device['y'] = y
-        self.devices.loc[self.devices['device_id'] == device_id] = device
+        ind = (np.where(self.devices['device_id'] == device_id)[0]).item()
+        self.devices.loc[ind, 'x'] = x
+        self.devices.loc[ind, 'y'] = y
 
     def get_devices(self):
         return self.devices
@@ -99,13 +100,19 @@ class Simulation:
                 self.set_device_location(device['device_id'], device['x'], y)
 
     def update_device_location(self, device_id):
+
         device = self.devices.loc[self.devices['device_id'] == device_id]
-        r = device.device[0].get_velocity() / self.fps
+        try:
+            r = device.device[0].get_velocity() / self.fps
+        except Exception as c:
+            r = device.device.get_velocity() / self.fps
         theta = np.random.choice(self.theta_direction_options)
         x_add, y_add = coor.pol2cart(theta, r, units='deg')
         x = min(max(0, device['x'][0] + x_add), self.grid_size-1)
         y = min(max(0, device['y'][0] + y_add), self.grid_size-1)
         self.set_device_location(device_id, x, y)
+
+        pass
 
     def update_devices_locations(self):
         for device_id in pd.unique(self.devices['device_id']):
